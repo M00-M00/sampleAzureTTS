@@ -42,7 +42,4 @@ sentences = args.sentences
 
 
 print( sentences[0])
-print(sentences)
-print(voices)
-print(output_folder)
 
