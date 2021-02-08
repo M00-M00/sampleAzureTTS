@@ -35,7 +35,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-O', "--output_folder", type=str, default="test\\")
 parser.add_argument("-V",  "--voices", type=str, default=[], nargs="+", action='append') 
 parser.add_argument("-S",  "--sentences", type=str, default=[] ,nargs="+", action='append') 
-parser.add_argument("-P",  "--prepare_ssmls", type=bool, default=False ) 
+parser.add_argument("-P",  "--prepare_ssmls", type=bool, default=True ) 
 args = parser.parse_args()
 
 output_folder = args.output_folder
