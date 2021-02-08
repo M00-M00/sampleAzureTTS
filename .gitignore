@@ -134,3 +134,7 @@ dmypy.json
 audio/
 test/
 text2speechv2-2.py
+
+token.pickle
+
+test.py
