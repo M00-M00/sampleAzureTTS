@@ -1,0 +1,6 @@
+key: f00d7fcdbbef47808b5018d74d6588cd
+region: eastus
+SAMPLE_SPREADSHEET_ID : '1a6pkt2uwpFtFNlAI6huvZvG6UpRFTgBO5JWJeVbiT2M'
+Sentences_Range : 'Sheet1!F1:O2'
+Voices_Range : "Sheet1!D3:D16"
+SSMLs : "ssmls.json"
