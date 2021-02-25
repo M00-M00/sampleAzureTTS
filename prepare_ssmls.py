@@ -9,7 +9,6 @@ import yaml
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
-
 stream = open('config.yml', 'r')
 keys = yaml.safe_load(stream)
 
@@ -19,11 +18,12 @@ SAMPLE_SPREADSHEET_ID = keys['SAMPLE_SPREADSHEET_ID']
 Sentences_Range = keys['Sentences_Range']
 Voices_Range = keys['Voices_Range']
 ssml_filename = keys['SSMLs']
+is_multi_language = keys["Multi_Language"]
 
 
 
 def main():
-    create_ssmls(fetch_data())
+    create_ssmls(fetch_data(), is_multi_language)
 
 
 
@@ -59,33 +59,53 @@ def fetch_data():
     values2 = voice.get('values', [])
     
     data = {}
-    data["sentences"] = {}
 
-    for n in range(len(values1[0])):
-        data["sentences"][values1[0][n]] = values1[1][n]
+    if is_multi_language:
+        data["voice-sentence"] = {}
+        for n in range(len(values1[0])):
+            data["voice-sentence"][values1[0][n]] = values1[1][n]
+ 
+    else: 
 
-    data["voices"] = {}
+        for n in range(len(values1[0])):
+            data["sentences"][values1[0][n]] = values1[1][n]
 
-    for n in range(len(values2)):
-        data["voices"][n] = values2[n]
+        data["voices"] = {}
+
+        for n in range(len(values2)):
+            data["voices"][n] = values2[n]
 
     return data
 
 
-def create_ssmls(data: dict):
+    
+
+def create_ssmls(data: dict, is_multi_language: bool):
 
     SSMLs = {}
     all_ssmls = []
 
-    for n in data["voices"]:    
-        voice = data["voices"][n][0]
-        lang = voice[:5]
-        SSMLs[voice] = {}
-        for m in data["sentences"]:
-            text = data["sentences"][m]
+    if is_multi_language:
+          for n in data["voice-sentence"]:       
+            voice = data["voice-sentence"][n][0]
+            text = data["voice-sentence"][n][1]
+            lang = voice[:5]
+            SSMLs[voice] = {}
             SSML = f'<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\" {lang} \"> <voice name=\"{voice}\"> {text} </voice> </speak>'
-            SSMLs[voice][m] = SSML
+            SSMLs[voice][n] = SSML
             all_ssmls.append(SSML)
+    
+    else: 
+        for n in data["voices"]:    
+            voice = data["voices"][n][0]
+            lang = voice[:5]
+            SSMLs[voice] = {}
+            for m in data["sentences"]:
+                text = data["sentences"][m]
+                SSML = f'<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\" {lang} \"> <voice name=\"{voice}\"> {text} </voice> </speak>'
+                SSMLs[voice][m] = SSML
+                all_ssmls.append(SSML)
+
     
     data["SSMLs"] = SSMLs
     data["list_of_SSMLs"] = all_ssmls
@@ -93,6 +113,8 @@ def create_ssmls(data: dict):
     with open('ssmls.json', 'w') as fp:
         json.dump(data, fp)
     
+
+
 
 
 if __name__ == "__main__":

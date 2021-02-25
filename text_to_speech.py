@@ -41,7 +41,7 @@ args = parser.parse_args()
 output_folder = args.output_folder
 voices = args.voices
 sentences = args.sentences
-prepare_ssmls = args.prepare_ssmls
+make_ssmls = args.prepare_ssmls
 
 
 
@@ -137,6 +137,6 @@ def single_file(voice: str, sentence: str):
 
 
 if __name__ == "__main__":
-    if prepare_ssmls:
+    if make_ssmls:
         prepare_ssmls.main()
     generate_some_audio(voices, sentences)
